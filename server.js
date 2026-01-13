@@ -8,7 +8,7 @@ const name = process.env.NAME;
 
 // Define a route handler for the root URL ('/')
 app.get('/', (req, res) => {
-    res.send(`Hello, ${name}!`);
+    res.send(`Welcome, ${name}!`);
 });
 
 // Define the port number the server will listen on
