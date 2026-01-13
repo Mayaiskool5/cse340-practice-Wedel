@@ -7,12 +7,8 @@ const app = express();
 const name = process.env.NAME;
 
 // Define a route handler for the root URL ('/')
-// app.get('/', (req, res) => {
-//     res.send(`Welcome, ${name}!`);
-// });
-
-app.get('/new-route', (req, res) => {
-    res.send('This is a new route!');
+app.get('/', (req, res) => {
+    res.send(`Welcome, ${name}!`);
 });
 
 // Define the port number the server will listen on
