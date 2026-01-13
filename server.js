@@ -4,9 +4,11 @@ import express from 'express';
 // Create an instance of an Express application
 const app = express();
 
+const name = process.env.NAME;
+
 // Define a route handler for the root URL ('/')
 app.get('/', (req, res) => {
-    res.send('Hello, World!');
+    res.send('Hello, ${name}!');
 });
 
 // Define the port number the server will listen on
