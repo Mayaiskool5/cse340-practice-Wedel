@@ -1,8 +1,8 @@
 {
   "name": "cse340-practice-Wedel",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Starter project for CSE 340",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon --env-file=.env server.js",
     "start": "node server.js"
