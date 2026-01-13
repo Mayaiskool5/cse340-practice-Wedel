@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "dev": "nodemon --env-file=.env server.js",
-      "start": "node server.js"
-    },
+    "dev": "nodemon --env-file=.env server.js",
+    "start": "node server.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
