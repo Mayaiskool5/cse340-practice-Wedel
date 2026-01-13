@@ -11,6 +11,10 @@ app.get('/', (req, res) => {
     res.send(`Welcome, ${name}!`);
 });
 
+app.get('/new-route', (req, res) => {
+    res.send('This is a new route!');
+});
+
 // Define the port number the server will listen on
 const PORT = 3000;
 
