@@ -15,6 +15,11 @@ const PORT = process.env.PORT || 3000;
  * Setup Express Server
  */
 const app = express();
+const name = process.env.NAME; 
+
+app.get('/', (req, res) => {
+    res.send(`Hello, ${name}!`);
+});
 
 /**
  * Configure Express middleware
@@ -22,19 +27,28 @@ const app = express();
 // Serve static files (CSS, Images) from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Set EJS as the templating engine
+app.set('view engine', 'ejs');
+
+// Tell Express where to find your templates
+app.set('views', path.join(__dirname, 'src/views'));
+
 /**
- * Declare Routes
+ * Routes
  */
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src/views/home.html'));
+    const title = 'Welcome Home';
+    res.render('home', { title });
 });
 
 app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src/views/about.html'));
+    const title = 'About Me';
+    res.render('about', { title });
 });
 
 app.get('/products', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src/views/products.html'));
+    const title = 'Our Products';
+    res.render('products', { title });
 });
 
 // Start the server
