@@ -2,7 +2,6 @@
 import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
-import 'dotenv/config';
 
 // Course data - place this after imports, before routes
 const courses = {
@@ -70,6 +69,22 @@ app.set('view engine', 'ejs');
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
 
+app.use((req, res, next) => {
+    // Skip logging for routes that start with /. (like /.well-known/)
+    if (!req.path.startsWith('/.')) {
+        //console.log(`${req.method} ${req.url}`);
+    }
+    next(); // Pass control to the next middleware or route
+});
+
+// Middleware to add global data to all templates
+app.use((req, res, next) => {
+    // Add current year for copyright
+    res.locals.currentYear = new Date().getFullYear();
+
+    next();
+});
+
 /**
  * Routes
  */
@@ -93,6 +108,46 @@ app.get('/catalog', (req, res) => {
     res.render('catalog', {
         title: 'Course Catalog',
         courses: courses
+    });
+});
+
+// Enhanced course detail route with sorting
+app.get('/catalog/:courseId', (req, res, next) => {
+    const courseId = req.params.courseId;
+    const course = courses[courseId];
+
+    if (!course) {
+        const err = new Error(`Course ${courseId} not found`);
+        err.status = 404;
+        return next(err);
+    }
+
+    // Get sort parameter (default to 'time')
+    const sortBy = req.query.sort || 'time';
+
+    // Create a copy of sections to sort
+    let sortedSections = [...course.sections];
+
+    // Sort based on the parameter
+    switch (sortBy) {
+        case 'professor':
+            sortedSections.sort((a, b) => a.professor.localeCompare(b.professor));
+            break;
+        case 'room':
+            sortedSections.sort((a, b) => a.room.localeCompare(b.room));
+            break;
+        case 'time':
+        default:
+            // Keep original time order as default
+            break;
+    }
+
+    console.log(`Viewing course: ${courseId}, sorted by: ${sortBy}`);
+
+    res.render('course-detail', {
+        title: `${course.id} - ${course.title}`,
+        course: { ...course, sections: sortedSections },
+        currentSort: sortBy
     });
 });
 
