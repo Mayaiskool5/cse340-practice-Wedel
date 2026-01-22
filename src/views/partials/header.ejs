@@ -6,8 +6,24 @@
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/catalog.css">
+    <% if (NODE_ENV.includes('dev')) { %>
+    <script>
+        // Get the current hostname and port from the browser
+        const host = window.location.hostname;
+        const currentPort = window.location.port;
+
+        // Calculate WebSocket port (current port + 1)
+        const wsPort = currentPort ? (parseInt(currentPort) + 1) : 3001;
+
+        // Create WebSocket connection using dynamic hostname and port
+        const ws = new WebSocket(`ws://${host}:${wsPort}`);
+        ws.onclose = () => {
+            setTimeout(() => location.reload(), 2000);
+        };
+    </script>
+<% } %>
 </head>
-<body>
+<body class="<%= bodyClass %>">
     <header>
         <nav>
             <ul>

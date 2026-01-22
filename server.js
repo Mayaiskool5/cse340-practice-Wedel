@@ -45,6 +45,7 @@ const courses = {
  */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const NODE_ENV = process.env.NODE_ENV || 'production';
 const PORT = process.env.PORT || 3000;
 
 /**
@@ -82,6 +83,45 @@ app.use((req, res, next) => {
     // Add current year for copyright
     res.locals.currentYear = new Date().getFullYear();
 
+    next();
+});
+
+// Global middleware for time-based greeting
+app.use((req, res, next) => {
+    const currentHour = new Date().getHours();
+    let greetingMessage;
+
+    if (currentHour < 12) {
+        greetingMessage = "Good Morning!";
+    }
+    else if (currentHour >= 12 && currentHour < 17) {
+        greetingMessage = "Good Afternoon!";
+    }
+    else {
+        greetingMessage = "Good Evening!";
+    }
+
+    res.locals.greeting = greetingMessage;
+
+    next();
+});
+
+// Global middleware for random theme selection
+app.use((req, res, next) => {
+    const themes = ['blue-theme', 'green-theme', 'red-theme'];
+
+    // Your task: Pick a random theme from the array
+    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+
+    res.locals.bodyClass = randomTheme;
+
+    next();
+});
+
+// Global middleware to share query parameters with templates
+app.use((req, res, next) => {
+    // Make req.query available to all templates for debugging and conditional rendering
+    res.locals.queryParams = req.query || {};
     next();
 });
 
