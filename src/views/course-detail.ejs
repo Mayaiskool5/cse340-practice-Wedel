@@ -28,7 +28,15 @@
         </div>
     </div>
 
-    
+    <% if (queryParams && queryParams.sort) { %>
+        <div class="sort-message">
+            <p>Currently sorted by: <%= queryParams.sort %></p>
+        </div>
+    <% } else { %>
+        <div class="sort-message">
+            <p>No sorting applied, using default sorting by time.</p>
+        </div>
+    <% } %>
 
     <div class="navigation">
         <p><a href="/catalog">&larr; Back to Course Catalog</a></p>

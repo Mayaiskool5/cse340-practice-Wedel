@@ -91,6 +91,13 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 app.use((req, res, next) => {
+    // Make NODE_ENV available to all templates
+    res.locals.NODE_ENV = NODE_ENV.lowerCase() || 'production';
+    //Continue to the next middleware or route handler
+    next();
+})
+
+app.use((req, res, next) => {
     // Skip logging for routes that start with /. (like /.well-known/)
     if (!req.path.startsWith('/.')) {
         //console.log(`${req.method} ${req.url}`);
@@ -208,6 +215,13 @@ app.get('/catalog/:courseId', (req, res, next) => {
         title: `${course.id} - ${course.title}`,
         course: { ...course, sections: sortedSections },
         currentSort: sortBy
+    });
+});
+
+// Demo page route with header middleware
+app.get('/demo', addDemoHeaders, (req, res) => {
+    res.render('demo', {
+        title: 'Middleware Demo Page'
     });
 });
 

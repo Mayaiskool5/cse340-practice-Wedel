@@ -1,0 +1,40 @@
+<%- include('partials/header') %>
+<main>
+    <h1><%= title %></h1>
+
+    <div class="demo-section">
+        <h2>Global Middleware Results:</h2>
+        <!-- NOTE: We intentionally used <<%- "%=" %> for the greeting because you cant display a p tag within another p tag -->
+        <p><strong>Greeting:</strong> <%= greeting %></p>
+        <p><strong>Current Year:</strong> <%= currentYear %></p>
+        <p><strong>Theme:</strong> <%= bodyClass %></p>
+
+        <% if (Object.keys(queryParams).length > 0) { %>
+            <p><strong>Query Parameters:</strong></p>
+            <ul>
+                <% Object.keys(queryParams).forEach(key => { %>
+                    <li><%= key %>: <%= queryParams[key] %></li>
+                <% }); %>
+            </ul>
+        <% } else { %>
+            <p><em>No query parameters. Try adding ?debug=true to the URL.</em></p>
+        <% } %>
+    </div>
+
+    <div class="demo-section">
+        <h2>Route-Specific Middleware Results:</h2>
+        <p>This page has special HTTP headers that other pages don't have!</p>
+        <p><strong>To see the headers:</strong></p>
+        <ol>
+            <li>Open your browser's Developer Tools (F12)</li>
+            <li>Go to the Network tab</li>
+            <li>Refresh this page</li>
+            <li>Click on the demo page request</li>
+            <li>Look for headers starting with 'X-Demo' or 'X-Middleware'</li>
+        </ol>
+        <p><em>These headers only appear on this page because of route-specific middleware!</em></p>
+    </div>
+
+    <p><a href="/">&larr; Back to Home</a></p>
+</main>
+<%- include('partials/footer') %>
