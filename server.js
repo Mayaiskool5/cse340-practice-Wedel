@@ -48,6 +48,26 @@ const __dirname = path.dirname(__filename);
 const NODE_ENV = process.env.NODE_ENV || 'production';
 const PORT = process.env.PORT || 3000;
 
+// When in development mode, start a WebSocket server for live reloading
+if (NODE_ENV.includes('dev')) {
+    const ws = await import('ws');
+
+    try {
+        const wsPort = parseInt(PORT) + 1;
+        const wsServer = new ws.WebSocketServer({ port: wsPort });
+
+        wsServer.on('listening', () => {
+            console.log(`WebSocket server is running on port ${wsPort}`);
+        });
+
+        wsServer.on('error', (error) => {
+            console.error('WebSocket server error:', error);
+        });
+    } catch (error) {
+        console.error('Failed to start WebSocket server:', error);
+    }
+}
+
 /**
  * Setup Express Server
  */
@@ -55,7 +75,7 @@ const app = express();
 const name = process.env.NAME; 
 
 app.get('/', (req, res) => {
-    res.send(`Hello, ${name}!`);
+    res.send(`Welcome ${name}!`);
 });
 
 /**
@@ -191,17 +211,17 @@ app.get('/catalog/:courseId', (req, res, next) => {
     });
 });
 
-// Test route for 500 errors
-app.get('/test-error', (req, res, next) => {
-    const err = new Error('This is a test error');
-    err.status = 500;
-    next(err);
-});
-
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
     err.status = 404;
+    next(err);
+});
+
+// Test route for 500 errors
+app.get('/test-error', (req, res, next) => {
+    const err = new Error('This is a test error');
+    err.status = 500;
     next(err);
 });
 

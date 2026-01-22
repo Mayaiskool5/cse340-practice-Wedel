@@ -10,12 +10,13 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.28.0",
+  "packageManager": "pnpm@10.28.1",
   "dependencies": {
     "ejs": "^4.0.1",
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "ws": "^8.19.0"
   }
 }
