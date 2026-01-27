@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Starter project for CSE 340",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon --env-file=.env server.js",
     "start": "node server.js"
