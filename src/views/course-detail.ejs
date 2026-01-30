@@ -5,7 +5,6 @@
         <p class="course-meta"><%= course.id %> • <%= course.credits %> credits</p>
         <p class="course-description"><%= course.description %></p>
     </div>
-
     <div class="sections">
         <div class="sections-header">
             <h2>Available Sections</h2>
@@ -28,7 +27,7 @@
         </div>
     </div>
 
-    <% if (queryParams && queryParams.sort) { %>
+    <% if (queryParams.sort) { %>
         <div class="sort-message">
             <p>Currently sorted by: <%= queryParams.sort %></p>
         </div>

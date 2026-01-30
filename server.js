@@ -75,14 +75,13 @@ app.use((req, res, next) => {
     res.locals.NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
     //Continue to the next middleware or route handler
     next();
-})
 
 app.use((req, res, next) => {
-    // Skip logging for routes that start with /. (like /.well-known/)
-    if (!req.path.startsWith('/.')) {
-        //console.log(`${req.method} ${req.url}`);
-    }
-    next(); // Pass control to the next middleware or route
+// Skip logging for routes that start with /. (like /.well-known/)
+if (!req.path.startsWith('/.')) {
+    //console.log(`${req.method} ${req.url}`);
+}
+next(); // Pass control to the next middleware or route
 });
 
 // Middleware to add global data to all templates
@@ -92,6 +91,8 @@ app.use((req, res, next) => {
 
     next();
 });
+
+})
 
 // When in development mode, start a WebSocket server for live reloading
 if (NODE_ENV.includes('dev')) {
@@ -149,6 +150,7 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     // Make req.query available to all templates for debugging and conditional rendering
     res.locals.queryParams = req.query || {};
+
     next();
 });
 
@@ -218,12 +220,21 @@ app.get('/catalog/:courseId', (req, res, next) => {
     });
 });
 
-// Demo page route with header middleware
-// app.get('/demo', addDemoHeaders, (req, res) => {
-//     res.render('demo', {
-//         title: 'Middleware Demo Page'
-//     });
-// });
+// Route-specific middleware that sets custom headers
+const addDemoHeaders = (req, res, next) => {
+    // Your task: Set custom headers using res.setHeader()
+    res.setHeader('X-Demo-Page', 'true');
+    res.setHeader('X-Middleware-Demo', 'Middleware is running!');
+
+    next();
+};
+
+//Demo page route with header middleware
+app.get('/demo', addDemoHeaders, (req, res) => {
+    res.render('demo', {
+        title: 'Middleware Demo Page'
+    });
+});
 
 // Test route for 500 errors
 app.get('/test-error', (req, res, next) => {
