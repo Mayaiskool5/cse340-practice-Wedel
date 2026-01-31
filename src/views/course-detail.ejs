@@ -1,5 +1,22 @@
 <%- include('partials/header') %>
+
+<link rel="stylesheet" href="/css/catalog.css">
 <main>
+        <% if (Object.keys(queryParams).length > 0) { %>
+            <div class="sort-message">
+                <p>Query parameters: <%= JSON.stringify(queryParams) %></p>
+            <% if (queryParams.sort) { %>
+                <p>Currently sorted by: <%= queryParams.sort %></p>
+            <% } else { %>
+                <p>No sorting applied, using default sorting by time.</p>
+        <% } %>
+            </div>
+        <% } else { %>
+            <div class="sort-message">
+                <p>No query parameters provided. Using default sorting by time.</p>
+            </div>
+        <% } %>
+
     <div class="course-header">
         <h1><%= course.title %></h1>
         <p class="course-meta"><%= course.id %> • <%= course.credits %> credits</p>
@@ -26,16 +43,6 @@
             <% }); %>
         </div>
     </div>
-
-    <% if (queryParams.sort) { %>
-        <div class="sort-message">
-            <p>Currently sorted by: <%= queryParams.sort %></p>
-        </div>
-    <% } else { %>
-        <div class="sort-message">
-            <p>No sorting applied, using default sorting by time.</p>
-        </div>
-    <% } %>
 
     <div class="navigation">
         <p><a href="/catalog">&larr; Back to Course Catalog</a></p>

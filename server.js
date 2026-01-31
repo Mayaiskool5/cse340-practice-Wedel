@@ -3,6 +3,14 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
+/**
+ * Declare Important Variables
+ */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const NODE_ENV = process.env.NODE_ENV || 'production';
+const PORT = process.env.PORT || 3000;
+
 // Course data - place this after imports, before routes
 const courses = {
     'CS121': {
@@ -41,14 +49,6 @@ const courses = {
 };
 
 /**
- * Declare Important Variables
- */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const NODE_ENV = process.env.NODE_ENV || 'production';
-const PORT = process.env.PORT || 3000;
-
-/**
  * Setup Express Server
  */
 const app = express();
@@ -84,28 +84,17 @@ if (!req.path.startsWith('/.')) {
 next(); // Pass control to the next middleware or route
 });
 
-// Middleware to add global data to all templates
-app.use((req, res, next) => {
-    // Add current year for copyright
-    res.locals.currentYear = new Date().getFullYear();
-
-    next();
-});
-
 })
 
 // When in development mode, start a WebSocket server for live reloading
 if (NODE_ENV.includes('dev')) {
     const ws = await import('ws');
-
     try {
         const wsPort = parseInt(PORT) + 1;
         const wsServer = new ws.WebSocketServer({ port: wsPort });
-
         wsServer.on('listening', () => {
             console.log(`WebSocket server is running on port ${wsPort}`);
         });
-
         wsServer.on('error', (error) => {
             console.error('WebSocket server error:', error);
         });
@@ -114,8 +103,12 @@ if (NODE_ENV.includes('dev')) {
     }
 }
 
-// Global middleware for time-based greeting
+// Global middleware
 app.use((req, res, next) => {
+    // Add current year for copyright
+    res.locals.currentYear = new Date().getFullYear();
+    
+    // Middleware for time-based greeting
     const currentHour = new Date().getHours();
     let greetingMessage;
 
@@ -131,11 +124,7 @@ app.use((req, res, next) => {
 
     res.locals.greeting = greetingMessage;
 
-    next();
-});
-
-// Global middleware for random theme selection
-app.use((req, res, next) => {
+    //Random theme selection
     const themes = ['blue-theme', 'green-theme', 'red-theme'];
 
     // Your task: Pick a random theme from the array
@@ -143,13 +132,8 @@ app.use((req, res, next) => {
 
     res.locals.bodyClass = randomTheme;
 
-    next();
-});
-
-// Global middleware to share query parameters with templates
-app.use((req, res, next) => {
     // Make req.query available to all templates for debugging and conditional rendering
-    res.locals.queryParams = req.query || {};
+    res.locals.queryParams = { ...req.query };
 
     next();
 });
@@ -167,11 +151,6 @@ app.get('/about', (req, res) => {
     res.render('about', { title });
 });
 
-app.get('/products', (req, res) => {
-    const title = 'Our Products';
-    res.render('products', { title });
-});
-
 // Course catalog list page
 app.get('/catalog', (req, res) => {
     res.render('catalog', {
@@ -179,6 +158,23 @@ app.get('/catalog', (req, res) => {
         courses: courses
     });
 });
+
+// Route-specific middleware that sets custom headers
+const addDemoHeaders = (req, res, next) => {
+    // Your task: Set custom headers using res.setHeader()
+    res.setHeader('X-Demo-Page', 'true');
+    res.setHeader('X-Middleware-Demo', 'Middleware is running!');
+
+    next();
+};
+
+//Demo page route with header middleware
+app.get('/demo', addDemoHeaders, (req, res) => {
+    res.render('demo', {
+        title: 'Middleware Demo Page'
+    });
+});
+
 
 // Enhanced course detail route with sorting
 app.get('/catalog/:courseId', (req, res, next) => {
@@ -217,22 +213,6 @@ app.get('/catalog/:courseId', (req, res, next) => {
         title: `${course.id} - ${course.title}`,
         course: { ...course, sections: sortedSections },
         currentSort: sortBy
-    });
-});
-
-// Route-specific middleware that sets custom headers
-const addDemoHeaders = (req, res, next) => {
-    // Your task: Set custom headers using res.setHeader()
-    res.setHeader('X-Demo-Page', 'true');
-    res.setHeader('X-Middleware-Demo', 'Middleware is running!');
-
-    next();
-};
-
-//Demo page route with header middleware
-app.get('/demo', addDemoHeaders, (req, res) => {
-    res.render('demo', {
-        title: 'Middleware Demo Page'
     });
 });
 
