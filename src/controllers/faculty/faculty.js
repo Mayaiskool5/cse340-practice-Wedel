@@ -16,7 +16,7 @@ export const facultyDetailPage = (req, res) => {
         return res.status(404).send('Faculty member not found');
     }
 
-    res.render('faculty/list', { 
+    res.render('faculty/detail', { 
         title: facultyMember.name, 
         member: facultyMember 
     });
