@@ -1,0 +1,9 @@
+<h1>Faculty Directory</h1>
+<div class="faculty-grid">
+    <% facultyList.forEach(member => { %>
+        <div class="card">
+            <a href="/faculty/<%= member.id %>"><h3><%= member.name %></h3></a>
+            <p><%= member.title %> - <%= member.department %></p>
+        </div>
+    <% }) %>
+</div>

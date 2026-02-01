@@ -12,6 +12,10 @@ const router = Router();
 router.get('/', homePage);
 router.get('/about', aboutPage);
 
+// Faculty Routes
+router.get('/faculty', facultyController.facultyListPage);
+router.get('/faculty/:facultyId', facultyController.facultyDetailPage);
+
 // Course catalog routes
 router.get('/catalog', catalogPage);
 router.get('/catalog/:courseId', courseDetailPage);
