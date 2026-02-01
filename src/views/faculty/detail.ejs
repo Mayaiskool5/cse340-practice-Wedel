@@ -1,28 +1,13 @@
 <%- include('../partials/header') %>
 <main>
-    <div class="faculty-profile">
-        <h1><%= faculty.name %></h1>
-        <p class="faculty-title"><%= faculty.title %></p>
-        <p class="faculty-department"><%= faculty.department %> Department</p>
+    <h1><%= member.name %></h1>
+    <div class="faculty-detail">
+        <p><strong>Title:</strong> <%= member.title %></p>
+        <p><strong>Department:</strong> <%= member.department %></p>
+        <p><strong>Office:</strong> <%= member.office %></p>
+        <p><strong>Phone:</strong> <%= member.phone %></p>
+        <p><strong>Email:</strong> <a href="mailto:<%= member.email %>"><%= member.email %></a></p>
     </div>
-    
-    <div class="faculty-contact">
-        <h2>Contact Information</h2>
-        <div class="contact-details">
-            <div class="contact-item">
-                <strong>Office:</strong> <%= faculty.office %>
-            </div>
-            <div class="contact-item">
-                <strong>Phone:</strong> <a href="tel:<%= faculty.phone %>"><%= faculty.phone %></a>
-            </div>
-            <div class="contact-item">
-                <strong>Email:</strong> <a href="mailto:<%= faculty.email %>"><%= faculty.email %></a>
-            </div>
-        </div>
-    </div>
-    
-    <div class="navigation">
-        <p><a href="/faculty">&larr; Back to Faculty Directory</a></p>
-    </div>
+    <p><a href="/faculty">&larr; Back to Directory</a></p>
 </main>
 <%- include('../partials/footer') %>

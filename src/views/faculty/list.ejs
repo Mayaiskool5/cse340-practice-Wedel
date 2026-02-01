@@ -1,12 +1,14 @@
-<%- include('partials/header') %>
-<link rel="stylesheet" href="/css/main.css">
-<h1>Faculty Directory</h1>
-<div class="faculty-grid">
-    <% facultyList.forEach(member => { %>
-        <div class="card">
-            <a href="/faculty/<%= member.id %>"><h3><%= member.name %></h3></a>
-            <p><%= member.title %> - <%= member.department %></p>
-        </div>
-    <% }) %>
-</div>
-<%- include('partials/footer') %>
+<%- include('../partials/header') %>
+<main>
+    <h1>Faculty Directory</h1>
+    <div class="faculty-grid">
+        <% facultyList.forEach(member => { %>
+            <div class="faculty-card">
+                <h3><a href="/faculty/<%= member.id %>"><%= member.name %></a></h3>
+                <p><strong><%= member.title %></strong></p>
+                <p><%= member.department %></p>
+            </div>
+        <% }) %>
+    </div>
+</main>
+<%- include('../partials/footer') %>
