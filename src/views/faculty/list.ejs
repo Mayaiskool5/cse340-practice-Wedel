@@ -1,3 +1,5 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/main.css">
 <h1>Faculty Directory</h1>
 <div class="faculty-grid">
     <% facultyList.forEach(member => { %>
@@ -7,3 +9,4 @@
         </div>
     <% }) %>
 </div>
+<%- include('partials/footer') %>
