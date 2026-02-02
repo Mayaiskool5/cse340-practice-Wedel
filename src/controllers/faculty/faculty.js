@@ -1,6 +1,6 @@
 import { getFacultyById, getSortedFaculty } from '../../models/faculty/faculty.js';
 
-export const facultyListPage = (req, res) => {
+const facultyListPage = (req, res) => {
     const sortBy = req.query.sort || 'department';
     const facultyList = getSortedFaculty(sortBy);
     res.render('faculty/list', { 
@@ -9,7 +9,7 @@ export const facultyListPage = (req, res) => {
     });
 };
 
-export const facultyDetailPage = (req, res) => {
+const facultyDetailPage = (req, res) => {
     const facultyMember = getFacultyById(req.params.facultyId);
     
     if (!facultyMember) {
@@ -21,3 +21,5 @@ export const facultyDetailPage = (req, res) => {
         member: facultyMember 
     });
 };
+
+export { facultyListPage, facultyDetailPage};
