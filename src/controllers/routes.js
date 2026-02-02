@@ -5,6 +5,7 @@ const router = Router();
 import { addDemoHeaders } from '../middleware/demo/headers.js';
 import { catalogPage, courseDetailPage } from './catalog/catalog.js';
 import { homePage, aboutPage, demoPage, testErrorPage } from './index.js';
+import { facultyListPage, facultyDetailPage } from './faculty/faculty.js';
 
 // Home and basic pages
 router.get('/', homePage);
@@ -19,6 +20,10 @@ router.get('/demo', addDemoHeaders, demoPage);
 
 // Route to trigger a test error
 router.get('/test-error', testErrorPage);
+
+// Faculty directory routes
+router.get('/faculty', facultyListPage);
+router.get('/faculty/:facultyId', facultyDetailPage);
 
 export default router;
 
