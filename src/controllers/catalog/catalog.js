@@ -23,13 +23,15 @@ const courseDetailPage = (req, res, next) => {
     }
 
     // Handle sorting if requested
-    const sortBy = req.query.sort || 'time';
-    const sortedSections = getSortedSections(course.sections, sortBy);
-
+    const sortByTime = req.query.sort || 'time';
+    const sortedSections = getSortedSections(course.sections, sortByTime);
+    const sortByProfessor = req.query.sort || 'professor';
+    const sortedSectionsByProfessor = getSortedSections(course.sections, sortByProfessor);
     res.render('course-detail', {
         title: `${course.id} - ${course.title}`,
         course: { ...course, sections: sortedSections },
-        currentSort: sortBy
+        currentSort: sortByTime,
+        currentSortByProfessor: sortByProfessor
     });
 };
 
