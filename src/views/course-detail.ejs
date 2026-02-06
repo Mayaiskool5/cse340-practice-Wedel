@@ -29,8 +29,8 @@
             <div class="sort-options">
                 <span>Sort by: </span>
                 <a href="/catalog/<%= course.id %>" class="<%= currentSort === 'time' ? 'active' : '' %>">Time</a>
-                <a href="/catalog/<%= course.id %>?sort=professor" class="<%= currentSort === 'professor' ? 'active' : '' %>">Professor</a>
                 <a href="/catalog/<%= course.id %>?sort=room" class="<%= currentSort === 'room' ? 'active' : '' %>">Room</a>
+                <a href="/faculty/<%= section.professorSlug %>"">Professor</a>
             </div>
         </div>
 

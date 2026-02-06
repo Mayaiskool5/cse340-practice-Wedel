@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { Pool } from 'pg';
 import { fileURLToPath } from 'url';
+import { Pool } from 'pg';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +18,7 @@ const caCert = fs.readFileSync(path.join(__dirname, '../../bin', 'byuicse-psql-c
  *
  * Uses a connection string from environment variables for simplified setup.
  * The connection string format is:
- * postgresql://username:password@host:port/database
+ * postgresql://username:passwordhost:port/database
  */
 const pool = new Pool({
     connectionString: process.env.DB_URL,

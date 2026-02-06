@@ -5,7 +5,7 @@
     <div class="faculty-grid">
         <% facultyList.forEach(member => { %>
             <div class="faculty-card">
-                <h3><a href="/faculty/<%= member.id %>"><%= member.name %></a></h3>
+                <h3><a href="/faculty/<%= prof.slug %>"><%= member.name %></a></h3>
                 <p><strong><%= member.title %></strong></p>
                 <p><%= member.department %></p>
             </div>
