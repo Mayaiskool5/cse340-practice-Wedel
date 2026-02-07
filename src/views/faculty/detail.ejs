@@ -1,9 +1,9 @@
-<%- include('../partials/header') %>
+<%- include('./partials/header') %>
 <link rel="stylesheet" href="/css/main.css">
 <main>
     <div class="faculty-detail">
         <h1><%= member.name %></h1>
-        <p><strong>Title:</strong> <%= member.name %></p>
+        <p><strong>Title:</strong> <%= member.title %></p>
         <p><strong>Department:</strong> <%= member.department %></p>
         <h2>Contact Information</h2>
         <p><strong>Office:</strong> <%= member.office %></p>
@@ -15,4 +15,4 @@
         <p><a href="/faculty">&larr; Back to Faculty Directory</a></p>
     </div>
 </main>
-<%- include('../partials/footer') %>
+<%- include('./partials/footer') %>
