@@ -122,10 +122,36 @@ const getCoursesByDepartment = async (departmentId, sortBy = 'course_code') => {
 };
 
 /**
+ * Get all sections for a specific course, including professor details.
+ */
+const getCourseSections = async (courseId, sortBy = 'time') => {
+    const orderBy = sortBy === 'room' ? 's.room' : 's.time';
+    
+    const query = `
+        SELECT s.id, s.course_id, s.time, s.room, 
+               f.name as professor_name, f.slug as professor_slug
+        FROM sections s
+        LEFT JOIN faculty f ON s.faculty_id = f.id
+        WHERE s.course_id = $1
+        ORDER BY ${orderBy}
+    `;
+    
+    const result = await db.query(query, [courseId]);
+    
+    return result.rows.map(section => ({
+        id: section.id,
+        time: section.time,
+        room: section.room,
+        Professor: section.professor_name, // Matches your EJS <%= section.Professor %>
+        professorSlug: section.professor_slug // Matches your EJS <%= section.professorSlug %>
+    }));
+};
+
+/**
  * Wrapper functions for backward compatibility and cleaner API.
  * Arrow functions work great for simple wrappers like this.
  */
 const getCourseById = (courseId) => getCourse(courseId, 'id');
 const getCourseBySlug = (courseSlug) => getCourse(courseSlug, 'slug');
 
-export { getAllCourses, getCourseById, getCourseBySlug, getCoursesByDepartment };
+export { getAllCourses, getCourseById, getCourseBySlug, getCoursesByDepartment, getCourseSections };

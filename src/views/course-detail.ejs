@@ -3,43 +3,46 @@
 <link rel="stylesheet" href="/css/catalog.css">
 <link rel="stylesheet" href="/css/main.css">
 <main>
-        <% if (Object.keys(queryParams).length > 0) { %>
-            <div class="sort-message">
-                <p>Query parameters: <%= JSON.stringify(queryParams) %></p>
-            <% if (queryParams.sort) { %>
-                <p>Currently sorted by: <%= queryParams.sort %></p>
-            <% } else { %>
-                <p>No sorting applied, using default sorting by time.</p>
-        <% } %>
-            </div>
+    <% if (Object.keys(queryParams).length > 0) { %>
+        <div class="sort-message">
+            <p>Query parameters: <%= JSON.stringify(queryParams) %></p>
+        <% if (queryParams.sort) { %>
+            <p>Currently sorted by: <%= queryParams.sort %></p>
         <% } else { %>
-            <div class="sort-message">
-                <p>No query parameters provided. Using default sorting by time.</p>
-            </div>
-        <% } %>
+            <p>No sorting applied, using default sorting by time.</p>
+    <% } %>
+        </div>
+    <% } else { %>
+        <div class="sort-message">
+            <p>No query parameters provided. Using default sorting by time.</p>
+        </div>
+    <% } %>
 
     <div class="course-header">
-        <h1><%= course.title %></h1>
-        <p class="course-meta"><%= course.id %> • <%= course.credits %> credits</p>
+        <h1><%= course.name %></h1>
+        <p class="course-meta"><%= course.courseCode %> • <%= course.creditHours %> credits</p>
         <p class="course-description"><%= course.description %></p>
     </div>
+
     <div class="sections">
         <div class="sections-header">
             <h2>Available Sections</h2>
             <div class="sort-options">
                 <span>Sort by: </span>
-                <a href="/catalog/<%= course.id %>" class="<%= currentSort === 'time' ? 'active' : '' %>">Time</a>
-                <a href="/catalog/<%= course.id %>?sort=room" class="<%= currentSort === 'room' ? 'active' : '' %>">Room</a>
-                <a href="/faculty/<%= section.professorSlug %>"">Professor</a>
+                <a href="/catalog/<%= course.courseCode %>" class="<%= currentSort === 'time' ? 'active' : '' %>">Time</a>
+                <a href="/catalog/<%= course.courseCode %>?sort=room" class="<%= currentSort === 'room' ? 'active' : '' %>">Room</a>
+                <a href="/catalog/<%= course.courseCode %>?sort=professor" class="<%= currentSort === 'professor' ? 'active' : '' %>">Professor</a>
             </div>
         </div>
 
         <div class="section-list">
-            <% course.sections.forEach(section => { %>
+            <% sections.forEach(section => { %>
                 <div class="section-card">
                     <div class="section-time"><%= section.time %></div>
                     <div class="section-room">Room: <%= section.room %></div>
-                    <div class="section-professor">Instructor: <%= section.professor %></div>
+                    <div class="section-professor">
+                        Instructor: <a href="/faculty/<%= section.professorSlug %>"><%= section.professorSlug %></a>
+                    </div>
                 </div>
             <% }); %>
         </div>
