@@ -14,9 +14,8 @@
                         <%= course.section_count || 0 %>
                         </span>
                 </p>
-                
-                <h3><a href="/courses/<%= course.slug %>" class="btn"><%= course.title %></a></h3>
-                <p class="course-id"><%= course.id %> • <%= course.credits %> credits</p>
+                <h3><a href="/courses/<%= course.slug %>" class="btn"><%= course.name %></a></h3>
+                <p class="course-id"><%= course.courseCode %> • <%= course.credits %> credits</p>
                 <p class="course-description"><%= course.description %></p>
             </div>
         <% }); %>
