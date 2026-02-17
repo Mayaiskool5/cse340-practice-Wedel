@@ -5,6 +5,12 @@
         Enter your email and password to access your account. Do not have an account? <a href="/register">Register here</a>.
     </p>
 
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="error-message" style="color: red; margin-bottom: 1em;">
+            <%= error %>
+        </div>
+    <% } %>
+
     <form method="POST" action="/login" class="login-form">
         <!-- Email field -->
         <div class="form-group">
@@ -15,6 +21,7 @@
                 name="email" 
                 placeholder="you@example.com" 
                 required
+                autocomplete="username"
             >
         </div>
 
@@ -24,10 +31,11 @@
             <input 
                 type="password" 
                 id="password" 
-                name="password" 
+                name="password"
                 minlength="8" 
                 placeholder="Enter your password" 
                 required
+                autocomplete="current-password"
             >
         </div>
         <!-- Submit button -->

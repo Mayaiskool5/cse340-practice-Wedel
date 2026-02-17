@@ -23,7 +23,14 @@ const loginValidation = [
  * Display the login form.
  */
 const showLoginForm = (req, res) => {
-    res.render('forms/login/form', { title: 'User Login' });
+    // Retrieve error messages from session (if any)
+    const error = req.session.loginError;
+    // Clear the error after displaying
+    delete req.session.loginError;
+    res.render('forms/login/form', { 
+        title: 'User Login', 
+        error 
+    });
 };
 
 /**
@@ -35,6 +42,7 @@ const processLogin = async (req, res) => {
 
     if (!errors.isEmpty()) {
         console.error('Validation errors:', errors.array());
+        req.session.loginError = errors.array().map(e => e.msg).join(' ');
         return res.redirect('/login');
     }
 
@@ -46,14 +54,16 @@ const processLogin = async (req, res) => {
         const user = await findUserByEmail(email);
 
         if (!user) {
-            console.log('User not found');
+            console.log('User not found:', email);
+            req.session.loginError = 'No account found with that email.';
             return res.redirect('/login');
         }
 
         const isMatch = await verifyPassword(password, user.password);
-        
+
         if (!isMatch) {
-            console.log('Invalid password');
+            console.log('Invalid password:', email);
+            req.session.loginError = 'Incorrect password.';
             return res.redirect('/login');
         }
 
@@ -67,6 +77,7 @@ const processLogin = async (req, res) => {
 
     } catch (error) {
         console.error('Login processing error:', error);
+        req.session.loginError = 'An error occurred during login. Please try again.';
         res.redirect('/login');
     }
 };
@@ -92,8 +103,7 @@ const processLogout = (req, res) => {
             console.error('Error destroying session:', err);
 
             /**
-             * Clear the session cookie from the browser anyway, so the client
-             * does not keep sending an invalid session ID.
+             * Clear the session cookie from the browser.
              */
             res.clearCookie('connect.sid');
 

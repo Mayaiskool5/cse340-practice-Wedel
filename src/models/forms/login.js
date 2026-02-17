@@ -15,8 +15,13 @@ const findUserByEmail = async (email) => {
         LIMIT 1
         `;
     
-        const result = await db.query(query, [email]);
-        return result.rows.length > 0 ? result.rows[0] : null;
+        try {
+            const result = await db.query(query, [email]);
+            return result.rows.length > 0 ? result.rows[0] : null;
+        } catch (error) {
+            console.error('Database error in findUserByEmail:', error);
+            throw error;
+        }
 };
 
 /**
@@ -27,8 +32,13 @@ const findUserByEmail = async (email) => {
  * @returns {Promise<boolean>} True if password matches, false otherwise
  */
 const verifyPassword = async (plainPassword, hashedPassword) => {
-    const isMatch = await bcrypt.compare(plainPassword, hashedPassword);
-    return isMatch;
+        try {
+            // bcrypt.compare returns a boolean
+            return await bcrypt.compare(plainPassword, hashedPassword);
+        } catch (error) {
+            console.error('Bcrypt error in verifyPassword:', error);
+            return false;
+    }
 };
 
 export { findUserByEmail, verifyPassword };
