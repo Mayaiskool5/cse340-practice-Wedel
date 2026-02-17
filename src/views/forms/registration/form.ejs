@@ -6,22 +6,30 @@
     </p>
 
     <form method="POST" action="/register" class="registration-form">
+        <% if (locals.errors) { %>
+            <ul class="error-list">
+                <% errors.forEach(function(error) { %>
+                    <li><%= error.msg %></li>
+                <% }); %>
+            </ul>
+        <% } %>
+        
         <!-- Name field -->
         <div class="form-group">
             <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" autocomplete="name" minlength="2" required placeholder="Enter your full name">
+            <input type="text" id="name" name="name" autocomplete="name" minlength="2" required placeholder="Enter your full name" value="<%= locals.values?.name || '' %>">
         </div>
 
         <!-- Email field -->
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" autocomplete="email" required placeholder="email@example.com">
+            <input type="email" id="email" name="email" autocomplete="email" required placeholder="email@example.com" value="<%= locals.values?.email || '' %>">
         </div>
 
         <!-- Email confirmation field -->
-         <div class="form-group">
+        <div class="form-group">
             <label for="emailConfirm">Confirm Email Address</label>
-            <input type="email" id="emailConfirm" name="emailConfirm" autocomplete="email" required placeholder="Re-enter your email">
+            <input type="email" id="emailConfirm" name="emailConfirm" autocomplete="email" required placeholder="Re-enter your email" value="<%= locals.values?.emailConfirm || '' %>">
         </div>
 
         <!-- Password field -->
@@ -33,7 +41,6 @@
                 name="password" 
                 autocomplete="new-password"
                 minlength="8" 
-                pattern="(?=.*[0-9])(?=.*[!@#$%^&*]).*" 
                 aria-describedby="password-requirements"
                 required
             >
@@ -46,12 +53,12 @@
         <div class="form-group">
             <label for="passwordConfirm">Confirm Password</label>
             <input 
-            type="password" 
-            id="passwordConfirm" 
-            name="passwordConfirm" 
-            autocomplete="new-password"
-            minlength="8" 
-            required>
+                type="password" 
+                id="passwordConfirm" 
+                name="passwordConfirm" 
+                autocomplete="new-password"
+                minlength="8" 
+                required>
         </div>
 
         <!-- Submit button -->

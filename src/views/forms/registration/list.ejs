@@ -22,7 +22,7 @@
                         <div class="detail-item">
                             <div class="label">Registered</div>
                             <div class="value">
-                                <%= new Date(user.created_at).toLocaleDateString() %>
+                                <%= typeof user.created_at === 'string' ? new Date(user.created_at).toLocaleDateString() : 'N/A' %>
                             </div>
                         </div>
                     </div>

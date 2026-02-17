@@ -20,8 +20,14 @@ const registrationValidation = [
         .withMessage('Must be a valid email address'),
     body('emailConfirm')
         .trim()
-        .custom((value, { req }) => value === req.body.email)
         .normalizeEmail()
+        .custom((value, { req }) => {
+            // Compare after both have been normalized
+            if (value !== req.body.email) {
+                throw new Error('Email addresses must match');
+            }
+            return true;
+        })
         .withMessage('Email addresses must match'),
     body('password')
         .isLength({ min: 8 })
@@ -49,13 +55,11 @@ const processRegistration = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        //console.error('Validation Errors:', errors.array());
-        //return res.redirect('/register');
         return res.render('forms/registration/form', { 
-        title: 'User Registration',
-        errors: errors.array(), // Pass errors to the UI
-        values: req.body        // Keep what the user typed so they don't have to restart
-    });
+            title: 'User Registration',
+            errors: errors.array(), // Pass errors to the UI
+            values: req.body        // Keep what the user typed so they don't have to restart
+        });
     }
 
     // Extract validated data from request body
@@ -66,22 +70,31 @@ const processRegistration = async (req, res) => {
         const exists = await emailExists(email);
 
         if (exists) {
-            console.log('Email already registered');
-            return res.redirect('/register');
+            return res.render('forms/registration/form', { 
+                title: 'User Registration',
+                message: 'Email already registered.', // Custom message
+                formData: req.body 
+            });
         }
 
         // Hash the password before saving to database
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Save user to database with hashed password
-        await saveUser(name, email, hashedPassword);
+        console.log('Saving user:', { name, email });
+        const savedUser = await saveUser(name, email, hashedPassword);
+        console.log('User saved successfully:', savedUser);
 
         console.log(`User ${name} registered successfully.`);
         res.redirect('/register/list');
         // NOTE: Later when we add authentication, we'll change this to require login first
     } catch (error) {
-        console.error('Registeration Error:', error);
-        res.redirect('/register');
+        console.error('Registration Error:', error);
+        res.render('forms/registration/form', { 
+            title: 'User Registration',
+            message: 'A server error occurred. Please try again.',
+            formData: req.body 
+        });
     }
 };
 
@@ -93,12 +106,15 @@ const showAllUsers = async (req, res) => {
     let users = [];
 
     try {
+        console.log('Fetching all users...');
         users = await getAllUsers();
+        console.log('Users fetched:', users.length, 'users found');
     } catch (error) {
         console.error('Fetch Users Error:', error);
         // users remains empty array on error
     }
 
+    console.log('Rendering list with users:', users);
     res.render('forms/registration/list', {
         title: 'Registered Users',
         users
