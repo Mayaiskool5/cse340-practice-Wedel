@@ -1,5 +1,17 @@
 import db from '../db.js';
 
+// AUTO-CREATE TABLE: Run this to fix the "users table does not exist" error
+const initTable = async () => {
+    const sql = `CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL
+    );`;
+    try { await db.query(sql); } catch (err) { console.error("Table init failed", err); }
+};
+initTable();
+
 /**
  * Checks if an email address is already registered in the database.
  * 

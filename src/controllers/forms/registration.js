@@ -20,14 +20,8 @@ const registrationValidation = [
         .withMessage('Must be a valid email address'),
     body('emailConfirm')
         .trim()
+        .custom((value, { req }) => value === req.body.email)
         .normalizeEmail()
-        .custom((value, { req }) => {
-            // Compare after both have been normalized
-            if (value !== req.body.email) {
-                throw new Error('Email addresses must match');
-            }
-            return true;
-        })
         .withMessage('Email addresses must match'),
     body('password')
         .isLength({ min: 8 })

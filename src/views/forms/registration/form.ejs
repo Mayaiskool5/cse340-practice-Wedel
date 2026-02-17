@@ -6,16 +6,16 @@
     </p>
 
     <form method="POST" action="/register" class="registration-form">
+        <% if (locals.message) { %>
+            <p class="error-message"><%= message %></p>
+        <% } %>
+        
         <% if (locals.errors) { %>
             <ul class="error-list">
                 <% errors.forEach(function(error) { %>
                     <li><%= error.msg %></li>
                 <% }); %>
             </ul>
-        <% } %>
-
-        <% if (locals.message) { %>
-            <p class="error-message"><%= message %></p>
         <% } %>
         
         <!-- Name field -->
