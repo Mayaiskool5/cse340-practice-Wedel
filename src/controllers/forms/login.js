@@ -67,13 +67,20 @@ const processLogin = async (req, res) => {
             return res.redirect('/login');
         }
 
-        // SECURITY: Remove password from user object before storing in session
+         // SECURITY: Remove password from user object before storing in session
         delete user.password;
 
         // Store user
         req.session.user = user;
 
-        res.redirect('/dashboard');
+        // FIX: Explicitly save the session before redirecting
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.redirect('/login');
+            }
+            res.redirect('/dashboard');
+        });
 
     } catch (error) {
         console.error('Login processing error:', error);
