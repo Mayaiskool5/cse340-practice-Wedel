@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('../partials/header') %>
 <link rel="stylesheet" href="/css/catalog.css">
 <link rel="stylesheet" href="/css/main.css">
 <main>
@@ -8,11 +8,17 @@
     <div class="course-list">
         <% Object.values(courses).forEach(course => { %>
             <div class="course-card">
-                <h3><a href="/catalog/<%= course.id %>"><%= course.title %></a></h3>
-                <p class="course-id"><%= course.id %> • <%= course.credits %> credits</p>
+                <p>
+                    <strong>Sections Available:</strong> 
+                        <span class="badge">
+                        <%= course.section_count || 0 %>
+                        </span>
+                </p>
+                <h3><a href="/courses/<%= course.slug %>" class="btn"><%= course.name %></a></h3>
+                <p class="course-id"><%= course.courseCode %> • <%= course.credits %> credits</p>
                 <p class="course-description"><%= course.description %></p>
             </div>
         <% }); %>
     </div>
 </main>
-<%- include('partials/footer') %>
+<%- include('../partials/footer') %>
