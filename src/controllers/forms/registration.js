@@ -58,7 +58,7 @@ const processRegistration = async (req, res) => {
         return res.render('forms/registration/form', { 
             title: 'User Registration',
             errors: errors.array(), // Pass errors to the UI
-            values: req.body        // Keep what the user typed so they don't have to restart
+            formData: req.body        // Keep what the user typed so they don't have to restart
         });
     }
 
@@ -82,17 +82,16 @@ const processRegistration = async (req, res) => {
 
         // Save user to database with hashed password
         console.log('Saving user:', { name, email });
-        const savedUser = await saveUser(name, email, hashedPassword);
-        console.log('User saved successfully:', savedUser);
+        await saveUser(name, email, hashedPassword);
+        console.log('User saved successfully:', name);
 
         console.log(`User ${name} registered successfully.`);
         res.redirect('/register/list');
         // NOTE: Later when we add authentication, we'll change this to require login first
     } catch (error) {
-        console.error('Registration Error:', error);
         res.render('forms/registration/form', { 
             title: 'User Registration',
-            message: 'A server error occurred. Please try again.',
+            message: 'Server Error. Please try again.',
             formData: req.body 
         });
     }
