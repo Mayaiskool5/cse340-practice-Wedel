@@ -21,6 +21,7 @@ const registrationValidation = [
     body('emailConfirm')
         .trim()
         .custom((value, { req }) => value === req.body.email)
+        .normalizeEmail()
         .withMessage('Email addresses must match'),
     body('password')
         .isLength({ min: 8 })
@@ -48,8 +49,13 @@ const processRegistration = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        console.error('Validation Errors:', errors.array());
-        return res.redirect('/register');
+        //console.error('Validation Errors:', errors.array());
+        //return res.redirect('/register');
+        return res.render('forms/registration/form', { 
+        title: 'User Registration',
+        errors: errors.array(), // Pass errors to the UI
+        values: req.body        // Keep what the user typed so they don't have to restart
+    });
     }
 
     // Extract validated data from request body
