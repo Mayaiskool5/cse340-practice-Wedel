@@ -41,8 +41,10 @@ const processLogin = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        console.error('Validation errors:', errors.array());
-        req.session.loginError = errors.array().map(e => e.msg).join(' ');
+        // Validation errors: loop and create flash messages
+        errors.array().forEach(error => {
+            req.flash('error', error.msg);
+        });
         return res.redirect('/login');
     }
 
@@ -54,16 +56,16 @@ const processLogin = async (req, res) => {
         const user = await findUserByEmail(email);
 
         if (!user) {
-            console.log('User not found:', email);
-            req.session.loginError = 'No account found with that email.';
+            // User not found: Generic error for security
+            req.flash('error', 'Invalid email or password');
             return res.redirect('/login');
         }
 
         const isMatch = await verifyPassword(password, user.password);
 
         if (!isMatch) {
-            console.log('Invalid password:', email);
-            req.session.loginError = 'Incorrect password.';
+            // Invalid password: Generic error for security
+            req.flash('error', 'Invalid email or password');
             return res.redirect('/login');
         }
 
@@ -73,18 +75,23 @@ const processLogin = async (req, res) => {
         // Store user
         req.session.user = user;
 
+        // Successful login: Personalized welcome message
+        req.flash('success', `Welcome back, ${user.name}!`);
+
         // FIX: Explicitly save the session before redirecting
         req.session.save((err) => {
             if (err) {
                 console.error('Session save error:', err);
+                req.flash('error', 'Session error. Please try again.');
                 return res.redirect('/login');
             }
             res.redirect('/dashboard');
         });
 
     } catch (error) {
+        // Catch block errors: Server logging and feedback
         console.error('Login processing error:', error);
-        req.session.loginError = 'An error occurred during login. Please try again.';
+        req.flash('error', 'An error occurred during login. Please try again.');
         res.redirect('/login');
     }
 };

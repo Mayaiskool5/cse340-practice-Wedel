@@ -49,11 +49,11 @@ const processRegistration = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        return res.render('forms/registration/form', { 
-            title: 'User Registration',
-            errors: errors.array(), // Pass errors to the UI
-            formData: req.body        // Keep what the user typed so they don't have to restart
+        // Validation errors: Loop through errors and create flash messages
+        errors.array().forEach(error => {
+            req.flash('error', error.msg);
         });
+        return res.redirect('/register'); // Redirect back to form to see flashes        
     }
 
     // Extract validated data from request body
@@ -64,30 +64,26 @@ const processRegistration = async (req, res) => {
         const exists = await emailExists(email);
 
         if (exists) {
-            return res.render('forms/registration/form', { 
-                title: 'User Registration',
-                message: 'Email already registered.', // Custom message
-                formData: req.body 
-            });
+            // Duplicate email check: Use warning flash
+            req.flash('warning', 'An account with this email already exists. Please log in.');
+            return res.redirect('/login'); // Redirecting to login as requested
         }
 
         // Hash the password before saving to database
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Save user to database with hashed password
-        console.log('Saving user:', { name, email });
         await saveUser(name, email, hashedPassword);
-        console.log('User saved successfully:', name);
 
-        console.log(`User ${name} registered successfully.`);
-        res.redirect('/register/list');
-        // NOTE: Later when we add authentication, we'll change this to require login first
+        // Successful registration: Use success flash and redirect to /login
+        req.flash('success', 'Registration successful! You can now log in.');
+        res.redirect('/login');
+
     } catch (error) {
-        res.render('forms/registration/form', { 
-            title: 'User Registration',
-            message: 'Server Error. Please try again.',
-            formData: req.body 
-        });
+        // Catch block errors: Server logging and error flash
+        console.error('Registration Error:', error);
+        req.flash('error', 'A server error occurred. Please try again.');
+        res.redirect('/register');
     }
 };
 
