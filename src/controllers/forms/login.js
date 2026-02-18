@@ -8,15 +8,20 @@ const router = Router();
  * Validation rules for login form
  */
 const loginValidation = [
+    // Email field: basic validation + length safety
     body('email')
         .trim()
         .isEmail()
-        .withMessage('Please provide a valid email address')
-        .normalizeEmail(),
-
+        .withMessage('Please enter a valid email address')
+        .normalizeEmail()
+        .isLength({ max: 255 })
+        .withMessage('Email address is too long'),
+    // Password field: basic presence + length safety
     body('password')
-        .isLength({ min: 8 })
+        .notEmpty()
         .withMessage('Password is required')
+        .isLength({ min: 8, max: 128 })
+        .withMessage('Password must be between 8 and 128 characters')
 ];
 
 /**

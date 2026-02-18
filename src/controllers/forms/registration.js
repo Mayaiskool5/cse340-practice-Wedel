@@ -9,29 +9,50 @@ const router = Router();
  * Validation rules for user registration
  */
 const registrationValidation = [
+    // Name field: length range and character pattern
     body('name')
         .trim()
-        .isLength({ min: 2 })
-        .withMessage('Name must be at least 2 characters'),
+        .isLength({ min: 2, max: 100 })
+        .withMessage('Name must be between 2 and 100 characters')
+        .matches(/^[a-zA-Z\s'-]+$/)
+        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
+    // Email field: normalization and maximum length
     body('email')
         .trim()
         .isEmail()
+        .withMessage('Please enter a valid email address')
         .normalizeEmail()
-        .withMessage('Must be a valid email address'),
+        .isLength({ max: 255 })
+        .withMessage('Email address is too long'),
+    // Email Confirmation: Custom match check
     body('emailConfirm')
         .trim()
-        .custom((value, { req }) => value === req.body.email)
-        .normalizeEmail()
-        .withMessage('Email addresses must match'),
+        .custom((value, { req }) => {
+            if (value !== req.body.email) {
+                throw new Error('Email confirmation does not match email');
+            }
+            return true;
+        }),
+    // Password field: length range and complexity (0-9, a-z, A-Z, special)
     body('password')
-        .isLength({ min: 8 })
+        .isLength({ min: 8, max: 128 })
+        .withMessage('Password must be between 8 and 128 characters')
         .matches(/[0-9]/)
         .withMessage('Password must contain at least one number')
-        .matches(/[!@#$%^&*]/)
+        .matches(/[a-z]/)
+        .withMessage('Password must contain at least one lowercase letter')
+        .matches(/[A-Z]/)
+        .withMessage('Password must contain at least one uppercase letter')
+        .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)
         .withMessage('Password must contain at least one special character'),
+    // Password Confirmation: Custom match check
     body('passwordConfirm')
-        .custom((value, { req }) => value === req.body.password)
-        .withMessage('Passwords must match')
+        .custom((value, { req }) => {
+            if (value !== req.body.password) {
+                throw new Error('Password confirmation does not match password');
+            }
+            return true;
+        })
 ];
 
 /**
