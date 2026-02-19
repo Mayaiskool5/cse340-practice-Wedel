@@ -76,10 +76,8 @@ const addLocalVariables = (req, res, next) => {
 
     // Convenience variable for UI state based on session state
     res.locals.isLoggedIn = false;
-    res.locals.user = null;
     if (req.session && req.session.user) {
         res.locals.isLoggedIn = true;
-        res.locals.user = req.session.user;
     }
 
     // Randomly assign a theme class to the body
