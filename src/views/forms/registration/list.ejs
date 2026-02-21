@@ -9,7 +9,7 @@
                     // Calculate permissions for this user card
                     // 'user' variable contains the current logged-in user (from session)
                     // 'listUser' is the user from the users array we're currently rendering
-                    const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
+                    const currentUser = locals.user || null;
                     const canEdit = currentUser && (currentUser.id === listUser.id || currentUser.roleName === 'admin');
                     const canDelete = currentUser && currentUser.roleName === 'admin' && currentUser.id !== listUser.id;
                 %>
