@@ -29,12 +29,14 @@ const loginValidation = [
  */
 const showLoginForm = (req, res) => {
     // Retrieve error messages from session (if any)
-    const error = req.session.loginError;
+    const error = req.flash('error'); 
+    const success = req.flash('success');
     // Clear the error after displaying
     delete req.session.loginError;
     res.render('forms/login/form', { 
         title: 'User Login', 
-        error 
+        error: error.length > 0 ? error[0] : null, // Get the first message
+        success: success.length > 0 ? success[0] : null 
     });
 };
 
@@ -47,9 +49,7 @@ const processLogin = async (req, res) => {
 
     if (!errors.isEmpty()) {
         // Validation errors: loop and create flash messages
-        errors.array().forEach(error => {
-            req.flash('error', error.msg);
-        });
+        req.flash('error', errors.array()[0].msg);
         return res.redirect('/login');
     }
 
