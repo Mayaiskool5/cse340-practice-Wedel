@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import { emailExists, saveUser, getAllUsers, getUserById, updateUser, deleteUser } from '../../models/forms/registration.js';
-import { requireLogin } from '../../middleware/auth.js';
+import { validationResult } from 'express-validator';
 
 const router = Router();
 
@@ -198,34 +198,12 @@ const processDeleteAccount = async (req, res) => {
     res.redirect('/register/list');
 };
 
-/**
- * GET /register - Display the registration form
- */
-router.get('/', showRegistrationForm);
 
-/**
- * POST /register - Handle registration form submission with validation
- */
-router.post('/', processRegistration);
-
-/**
- * GET /register/list - Display all registered users
- */
-router.get('/list', showAllUsers);
-
-/**
- * GET /register/:id/edit - Display edit account form
- */
-router.get('/:id/edit', requireLogin, showEditAccountForm);
-
-/**
- * POST /register/:id/edit - Process account edit
- */
-router.post('/:id/edit', requireLogin, processEditAccount);
-
-/**
- * POST /register/:id/delete - Delete user account
- */
-router.post('/:id/delete', requireLogin, processDeleteAccount);
-
-export default router;
+export { 
+    showRegistrationForm, 
+    processRegistration, 
+    showAllUsers,
+    showEditAccountForm,
+    processEditAccount,
+    processDeleteAccount
+};

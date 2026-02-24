@@ -74,8 +74,6 @@ router.get('/', showContactForm);
  */
 router.get('/responses', showContactResponses);
 
-router.post('/', handleContactSubmission);
-
 // Export router as default, and specific functions for root-level routes
+export { showContactForm, showContactResponses, handleContactSubmission };
 export default router;
-export { showContactForm, showContactResponses };

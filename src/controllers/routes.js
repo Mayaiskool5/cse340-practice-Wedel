@@ -3,10 +3,17 @@ import { addDemoHeaders } from '../middleware/demo/headers.js';
 import { catalogPage, courseDetailPage } from './catalog/catalog.js';
 import { homePage, aboutPage, demoPage, testErrorPage } from './index.js';
 import { facultyListPage, facultyDetailPage } from './faculty/faculty.js';
-import contactRoutes from './forms/contact.js';
-import loginRoutes, {processLogin, processLogout, showDashboard } from './forms/login.js';
+import contactRoutes, { handleContactSubmission } from './forms/contact.js';
+import loginRoutes, { processLogin, processLogout, showDashboard } from './forms/login.js';
 import { requireLogin } from '../middleware/auth.js';
-import processRegistration from './forms/registration.js';
+import { 
+    showRegistrationForm, 
+    processRegistration, 
+    showAllUsers, 
+    showEditAccountForm, 
+    processEditAccount, 
+    processDeleteAccount 
+} from './forms/registration.js';
 
 import { Router } from 'express';
 
@@ -38,19 +45,32 @@ router.use('/faculty', (req, res, next) => {
     next();
 });
 
+// Define the POST handler specifically for /contact with validation first
+router.post('/contact', contactValidation, handleContactSubmission);
+
 // Contact form routes
 router.use('/contact', contactRoutes);
 
-router.post('/contact', contactValidation);
-
-// Add registration-specific styles to all registration routes
 router.use('/register', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/registration.css">');
     next();
 });
 
-// Registration logic
+// 2. GET the form
+router.get('/register', showRegistrationForm);
+
+// 3. POST the form (Validation + Handler)
 router.post('/register', registrationValidation, processRegistration);
+
+// 4. User List
+router.get('/register/list', requireLogin, showAllUsers);
+
+// 5. Edit Account (GET and POST)
+router.get('/register/:id/edit', requireLogin, showEditAccountForm);
+router.post('/register/:id/edit', requireLogin, editValidation, processEditAccount);
+
+// 6. Delete Account
+router.post('/register/:id/delete', requireLogin, processDeleteAccount);
 
 // Add login-specific styles to all login routes
 router.use('/login', (req, res, next) => {
