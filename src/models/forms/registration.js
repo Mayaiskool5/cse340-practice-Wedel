@@ -40,7 +40,7 @@ const emailExists = async (email) => {
 const saveUser = async (name, email, hashedPassword) => {
     try {
         // RETURNING id is required in Postgres to get the new ID back
-        const sql = 'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id';
+        const sql = 'INSERT INTO users (name, email, password, role_id) VALUES ($1, $2, $3, (SELECT id FROM roles WHERE role_name = \'user\')) RETURNING id';
         const res = await db.query(sql, [name, email, hashedPassword]);
         return res.rows[0].id;
     } catch (err) {

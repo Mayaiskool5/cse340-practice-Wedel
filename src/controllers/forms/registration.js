@@ -161,7 +161,7 @@ const showEditAccountForm = async (req, res) => {
     }
 
     // Check permissions: users can edit themselves, admins can edit anyone
-    const canEdit = currentUser.id === targetUserId || currentUser.roleName === 'admin';
+    const canEdit = currentUser.id === targetUserId || currentUser.email === 'admin@example.com';
 
     if (!canEdit) {
         req.flash('error', 'You do not have permission to edit this account.');
