@@ -2,6 +2,11 @@
 <link rel="stylesheet" href="/css/main.css">
 <main>
     <div class="faculty-detail">
+        <img 
+            src="/images/faculty/<%= member.slug %>.jpg" 
+            alt="Photo of <%= member.name %>" 
+            class="faculty-detail-photo"
+        >
         <h1><%= member.name %></h1>
         <p><strong>Title:</strong> <%= member.title %></p>
         <p><strong>Department:</strong> <%= member.department %></p>

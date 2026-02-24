@@ -132,3 +132,49 @@
         }
     }
 }
+
+.faculty-card {
+    position: relative;
+}
+
+.faculty-photo {
+    width: 12%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 7px;
+    background: url('https://placehold.co/480') center / cover no-repeat;
+}
+
+.faculty-detail-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.faculty-detail-photo {
+    width: 300px; /* Larger than the list page version */
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 8px; /* Optional: adds rounded corners */
+    /* Reuse the placeholder trick from the list page */
+    background: url('https://placehold.co') center / cover no-repeat;
+}
+
+.faculty-info {
+    flex: 1; /* Allows text to take up remaining space */
+}
+
+/* Responsive adjustment for mobile */
+@media (max-width: 600px) {
+    .faculty-detail-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .faculty-detail-photo {
+        width: 100%;
+        max-width: 400px;
+    }
+}
