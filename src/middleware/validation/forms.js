@@ -74,8 +74,7 @@ const registrationValidation = [
 /**
  * POST /contact - Handle contact form submission with validation
  */
-router.post('/',
-    [
+const contactValidation = [
         body('subject')
             .trim()
             .isLength({ min: 2, max: 255 })
@@ -95,9 +94,7 @@ router.post('/',
                 }
                 return true;
             })
-    ],
-    handleContactSubmission
-);
+];
 
 /**
  * Validation rules for editing user accounts
@@ -118,13 +115,9 @@ const editValidation = [
         .withMessage('Email address is too long')
 ];
 
-// Routes
-router.post('/', loginValidation)
-router.post('/:id/edit',editValidation)
-router.post('/', registrationValidation)
-
 export {
     loginValidation, 
     registrationValidation, 
-    editValidation 
+    editValidation,
+    contactValidation
 };

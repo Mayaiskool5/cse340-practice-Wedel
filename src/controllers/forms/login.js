@@ -156,4 +156,4 @@ router.post('/', processLogin);
 
 // Export router as default, and specific functions for root-level routes
 export default router;
-export { processLogout, showDashboard };
+export { processLogin, processLogout, showDashboard };

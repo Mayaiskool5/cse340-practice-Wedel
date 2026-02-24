@@ -3,15 +3,20 @@ import { addDemoHeaders } from '../middleware/demo/headers.js';
 import { catalogPage, courseDetailPage } from './catalog/catalog.js';
 import { homePage, aboutPage, demoPage, testErrorPage } from './index.js';
 import { facultyListPage, facultyDetailPage } from './faculty/faculty.js';
-
 import contactRoutes from './forms/contact.js';
-import registrationValidation from '../middleware/validation/forms.js';
-
-import loginRoutes from './forms/login.js';
-import { processLogout, showDashboard } from './forms/login.js';
+import loginRoutes, {processLogin, processLogout, showDashboard } from './forms/login.js';
 import { requireLogin } from '../middleware/auth.js';
+import processRegistration from './forms/registration.js';
 
 import { Router } from 'express';
+
+// Import Validation Rules from Middleware
+import { 
+    loginValidation, 
+    registrationValidation, 
+    editValidation,
+    contactValidation 
+} from '../middleware/validation/forms.js';
 
 const router = Router();
 
@@ -36,14 +41,16 @@ router.use('/faculty', (req, res, next) => {
 // Contact form routes
 router.use('/contact', contactRoutes);
 
+router.post('/contact', contactValidation);
+
 // Add registration-specific styles to all registration routes
 router.use('/register', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/registration.css">');
     next();
 });
 
-// Registration routes
-router.use('/register', registrationValidation);
+// Registration logic
+router.post('/register', registrationValidation, processRegistration);
 
 // Add login-specific styles to all login routes
 router.use('/login', (req, res, next) => {
@@ -52,7 +59,10 @@ router.use('/login', (req, res, next) => {
 });
 
 // Login routes (form and submission)
-router.use('/login', loginRoutes);
+router.use('/login', loginRoutes, loginValidation, processLogin);
+
+// Validation rules for registration form
+router.use('/register', editValidation);
 
 // Authentication-related routes at root level
 router.get('/logout', processLogout);
