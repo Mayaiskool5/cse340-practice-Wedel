@@ -1,79 +1,9 @@
 import { Router } from 'express';
-import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcrypt';
 import { emailExists, saveUser, getAllUsers, getUserById, updateUser, deleteUser } from '../../models/forms/registration.js';
 import { requireLogin } from '../../middleware/auth.js';
 
 const router = Router();
-
-/**
- * Validation rules for user registration
- */
-const registrationValidation = [
-    // Name field: length range and character pattern
-    body('name')
-        .trim()
-        .isLength({ min: 2, max: 100 })
-        .withMessage('Name must be between 2 and 100 characters')
-        .matches(/^[a-zA-Z0-9\s'-]+$/)
-        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
-    // Email field: normalization and maximum length
-    body('email')
-        .trim()
-        .isEmail()
-        .withMessage('Please enter a valid email address')
-        .normalizeEmail()
-        .isLength({ max: 255 })
-        .withMessage('Email address is too long'),
-    // Email Confirmation: Custom match check
-    body('emailConfirm')
-        .trim()
-        .custom((value, { req }) => {
-            if (value !== req.body.email) {
-                throw new Error('Email confirmation does not match email');
-            }
-            return true;
-        }),
-    // Password field: length range and complexity (0-9, a-z, A-Z, special)
-    body('password')
-        .isLength({ min: 8, max: 128 })
-        .withMessage('Password must be between 8 and 128 characters')
-        .matches(/[0-9]/)
-        .withMessage('Password must contain at least one number')
-        .matches(/[a-z]/)
-        .withMessage('Password must contain at least one lowercase letter')
-        .matches(/[A-Z]/)
-        .withMessage('Password must contain at least one uppercase letter')
-        .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)
-        .withMessage('Password must contain at least one special character'),
-    // Password Confirmation: Custom match check
-    body('passwordConfirm')
-        .custom((value, { req }) => {
-            if (value !== req.body.password) {
-                throw new Error('Password confirmation does not match password');
-            }
-            return true;
-        })
-];
-
-/**
- * Validation rules for editing user accounts
- */
-const editValidation = [
-    body('name')
-        .trim()
-        .isLength({ min: 2, max: 100 })
-        .withMessage('Name must be between 2 and 100 characters')
-        .matches(/^[a-zA-Z0-9\s'-]+$/)
-        .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
-    body('email')
-        .trim()
-        .isEmail()
-        .normalizeEmail()
-        .withMessage('Must be a valid email address')
-        .isLength({ max: 255 })
-        .withMessage('Email address is too long')
-];
 
 /**
  * Display the registration form page.
@@ -276,7 +206,7 @@ router.get('/', showRegistrationForm);
 /**
  * POST /register - Handle registration form submission with validation
  */
-router.post('/', registrationValidation, processRegistration);
+router.post('/', processRegistration);
 
 /**
  * GET /register/list - Display all registered users
@@ -291,7 +221,7 @@ router.get('/:id/edit', requireLogin, showEditAccountForm);
 /**
  * POST /register/:id/edit - Process account edit
  */
-router.post('/:id/edit', requireLogin, editValidation, processEditAccount);
+router.post('/:id/edit', requireLogin, processEditAccount);
 
 /**
  * POST /register/:id/delete - Delete user account

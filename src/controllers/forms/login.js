@@ -1,28 +1,8 @@
-import { body, validationResult } from 'express-validator';
+import { validationResult } from 'express-validator';
 import { findUserByEmail, verifyPassword } from '../../models/forms/login.js';
 import { Router } from 'express';
 
 const router = Router();
-
-/**
- * Validation rules for login form
- */
-const loginValidation = [
-    // Email field: basic validation + length safety
-    body('email')
-        .trim()
-        .isEmail()
-        .withMessage('Please enter a valid email address')
-        .normalizeEmail()
-        .isLength({ max: 255 })
-        .withMessage('Email address is too long'),
-    // Password field: basic presence + length safety
-    body('password')
-        .notEmpty()
-        .withMessage('Password is required')
-        .isLength({ min: 8, max: 128 })
-        .withMessage('Password must be between 8 and 128 characters')
-];
 
 /**
  * Display the login form.
@@ -86,7 +66,7 @@ const processLogin = async (req, res) => {
         const displayName = user.account_firstname || user.name || "User";
         req.flash('success', `Welcome back, ${displayName}!`);
 
-        // FIX: Explicitly save the session before redirecting
+        // Save the session before redirecting
         req.session.save((err) => {
             if (err) {
                 console.error('Session save error:', err);
@@ -172,7 +152,7 @@ const showDashboard = (req, res) => {
 
 // Routes
 router.get('/', showLoginForm);
-router.post('/', loginValidation, processLogin);
+router.post('/', processLogin);
 
 // Export router as default, and specific functions for root-level routes
 export default router;
