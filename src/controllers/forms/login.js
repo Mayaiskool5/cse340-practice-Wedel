@@ -62,6 +62,7 @@ const processLogin = async (req, res) => {
 
         if (!user) {
             // User not found: Generic error for security
+            console.log(`Login failed: No user found for ${email}`);
             req.flash('error', 'Invalid email or password');
             return res.redirect('/login');
         }
@@ -70,18 +71,20 @@ const processLogin = async (req, res) => {
 
         if (!isMatch) {
             // Invalid password: Generic error for security
+            console.log(`Login failed: Password mismatch for ${email}`);
             req.flash('error', 'Invalid email or password');
             return res.redirect('/login');
         }
 
-         // SECURITY: Remove password from user object before storing in session
+        // SECURITY: Remove password from user object before storing in session
         delete user.password;
 
         // Store user
         req.session.user = user;
 
         // Successful login: Personalized welcome message
-        req.flash('success', `Welcome back, ${user.name}!`);
+        const displayName = user.account_firstname || user.name || "User";
+        req.flash('success', `Welcome back, ${displayName}!`);
 
         // FIX: Explicitly save the session before redirecting
         req.session.save((err) => {

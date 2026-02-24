@@ -13,8 +13,7 @@ const findUserByEmail = async (email) => {
             users.id, 
             users.name, 
             users.email, 
-            users.password, 
-            users.created_at,
+            users.password,
             roles.role_name AS "roleName"
         FROM users
         INNER JOIN roles ON users.role_id = roles.id
