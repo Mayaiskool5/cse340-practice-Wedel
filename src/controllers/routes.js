@@ -5,7 +5,7 @@ import { homePage, aboutPage, demoPage, testErrorPage } from './index.js';
 import { facultyListPage, facultyDetailPage } from './faculty/faculty.js';
 
 import contactRoutes from './forms/contact.js';
-import registrationValidation from './forms/';
+import registrationValidation from '../middleware/validation/forms.js';
 
 import loginRoutes from './forms/login.js';
 import { processLogout, showDashboard } from './forms/login.js';
